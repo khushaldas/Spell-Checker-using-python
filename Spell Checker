@@ -1,0 +1,86 @@
+
+def min_edit_distance(w1,w2):
+    len_1=len(w1)
+    len_2=len(w2)
+    x = [[0]*(len_2+1) for _ in range(len_1+1)] #the matrix whose last element = edit distance
+    for i in range(0,len_1+1):
+        #initialization of base case values
+        x[i][0]=i
+        for j in range(0,len_2+1):
+            x[0][j]=j
+    for i in range (1,len_1+1):
+        for j in range(1,len_2+1):
+            if w1[i-1]==w2[j-1]:
+                x[i][j] = x[i-1][j-1]
+            else :
+                x[i][j]= min(x[i][j-1],x[i-1][j],x[i-1][j-1])+1
+    return x[i][j]
+
+def retrieve_text():
+    global word
+    word=(entry.get())
+    word = word.upper()
+    path="D:\dict.txt"
+    dictionary_file=open(path,'r')
+    lines=dictionary_file.readlines()
+    distance_list=[]
+    #lev_distance_list=[]
+    print ("Suggestions:")
+    for i in range(0,90):
+        lines[i] = lines[i].upper()
+        distance=min_edit_distance(word,lines[i])
+        #lev_distance=levenshtein(word1,lines[i])
+        #lev_distance_list.append(lev_distance)
+        distance_list.append(distance)
+
+    #sorted(distance_list, key=int)
+    for j in range(0,90):
+
+        if distance_list[j]<=2:
+            print (lines[j])
+            #print(" ")
+    print("----Thanks for using SPELL CHECKER----")
+    dictionary_file.close()
+
+from tkinter import *
+
+if __name__ == "__main__":
+    window_GUI = Tk()
+    window_GUI.configure(background='black')
+    window_GUI.title("Spell Checker")
+    label_guide = Label(window_GUI, text="Enter the incorrect word")
+    label_guide.pack()
+    entry = Entry(window_GUI)
+    entry.configure(background='lightgrey')
+    entry.pack()
+    button = Button(window_GUI, text="Get Suggestions", command=retrieve_text)
+    button.configure(background='lightblue')
+    button.pack()
+    label_by = Label(window_GUI, text="BY: KHUSHAL DAS and MOHSIN ALI")
+    label_by.pack()
+    window_GUI.minsize(width=300, height=100)
+    window_GUI.maxsize(width=300, height=100)
+
+    # Initialize GUI
+    window_GUI.mainloop()
+
+
+
+
+'''def levenshtein(s, t):
+        if s == t: return 0
+        elif len(s) == 0: return len(t)
+        elif len(t) == 0: return len(s)
+        v0 = [None] * (len(t) + 1)
+        v1 = [None] * (len(t) + 1)
+        for i in range(len(v0)):
+            v0[i] = i
+        for i in range(len(s)):
+            v1[0] = i + 1
+            for j in range(len(t)):
+                cost = 0 if s[i] == t[j] else 1
+                v1[j + 1] = min(v1[j] + 1, v0[j + 1] + 1, v0[j] + cost)
+            for j in range(len(v0)):
+                v0[j] = v1[j]
+
+        return v1[len(t)]'''
